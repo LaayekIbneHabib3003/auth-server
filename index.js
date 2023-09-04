@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 initiateMongoDB();
 
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome" });
+  res.json({ message: "Hello world" });
 });
 
 app.use("/user", user);

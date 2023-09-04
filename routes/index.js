@@ -3,11 +3,11 @@ const router = express.Router();
 const { check, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-// const auth = require("../middleware");
+const auth = require("../middleware");
 const userSchema = require("../model");
 
 router.post(
-  "/signup",
+  "/sign-up",
   [
     check("name", "Please enter your full name").not().isEmpty(),
     check("email", "Please enter a valid email").isEmail(),
@@ -16,9 +16,14 @@ router.post(
     check("country", "Please enter your country").not().isEmpty(),
     check("state", "Please enter your state").not().isEmpty(),
     check("city", "Please enter your city").not().isEmpty(),
-    check("password", "Please enter a password with minimum 6 characters").isLength({
-      min: 6,
-    }),
+    check("password", "Please enter a password")
+      .not()
+      .isEmpty()
+      .isLength({
+        min: 6,
+        max: undefined,
+      })
+      .withMessage("Please enter a password with minimum 6 characters"),
   ],
 
   async (req, res) => {
@@ -83,7 +88,7 @@ router.post(
 );
 
 router.post(
-  "/signin",
+  "/sign-in",
   [
     check("email", "Please enter a valid email").isEmail(),
     check("password", "Please enter a password with minimum 6 characters").isLength({
@@ -143,21 +148,12 @@ router.post(
   }
 );
 
-// router.get("/me", auth, async (req, res) => {
-//   try {
-//     const user = await userSchema.findById(req.user.id);
-//     res.json(user);
-//   } catch (e) {
-//     res.send({ message: "Error while fetching user" });
-//   }
-// });
-
-router.get("/data", async (req, res) => {
+router.get("/get", auth, async (req, res) => {
   try {
-    const users = await userSchema.find();
-    res.json(users);
+    const user = await userSchema.findById(req.user.id);
+    res.json(user);
   } catch (e) {
-    res.send({ message: "Error while fetching users" });
+    res.send({ message: "Error while fetching user" });
   }
 });
 
