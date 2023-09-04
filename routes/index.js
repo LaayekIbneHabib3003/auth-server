@@ -16,14 +16,10 @@ router.post(
     check("country", "Please enter your country").not().isEmpty(),
     check("state", "Please enter your state").not().isEmpty(),
     check("city", "Please enter your city").not().isEmpty(),
-    check("password", "Please enter a password")
-      .not()
-      .isEmpty()
-      .isLength({
-        min: 6,
-        max: undefined,
-      })
-      .withMessage("Please enter a password with minimum 6 characters"),
+    check("password", "Please enter a password with minimum 6 characters").isLength({
+      min: 6,
+      max: undefined,
+    }),
   ],
 
   async (req, res) => {
